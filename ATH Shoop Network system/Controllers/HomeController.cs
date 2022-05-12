@@ -12,7 +12,7 @@ namespace ATH_Shoop_Network_system.Controllers
         {
             _logger = logger;
         }
-
+        
         public IActionResult Index()
         {
             return View();
@@ -22,6 +22,12 @@ namespace ATH_Shoop_Network_system.Controllers
         {
             return View();
         }
+        
+        public IActionResult About()
+        {
+            return View();
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -30,3 +36,6 @@ namespace ATH_Shoop_Network_system.Controllers
         }
     }
 }
+
+//TODO: Edit in About View 1
+//TODO: Edit in About View 2
