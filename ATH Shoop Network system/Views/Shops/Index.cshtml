@@ -1,0 +1,26 @@
+﻿@model ATH_Shoop_Network_system.Models.ShopItemsViewModel
+
+<div class="text-center">
+    <h1 class="display-4">Shop Index  Page</h1>
+    <div>
+        <tbody>
+            @foreach (var shop in Model.Shops)
+            {
+                <tr>
+                    <td>
+                        <h5>@shop.Id @shop.Name </h5>
+                        <div>
+                            <div>
+                                @shop.Phone
+                            </div>
+                            <div>
+                                @shop.Address
+                            </div>
+                            <br>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </div>
+</div>
