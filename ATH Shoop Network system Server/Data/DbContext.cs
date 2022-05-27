@@ -7,7 +7,7 @@ namespace ATH_Shoop_Network_system_Server.Data
     public class DbContext : IdentityDbContext
     {
         //public DbContext() { }
-        public DbContext(DbContextOptions<DbContext> options) : base(options) { }
+        public DbContext(DbContextOptions options) : base(options) { }
         public DbSet<Shop> Shops { get; set; } = null!;
         public DbSet<Product> Products { get; set; } = null!;
         public DbSet<ProductInShop> ProductInShops { get; set; } = null!;

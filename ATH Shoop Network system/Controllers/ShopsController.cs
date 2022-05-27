@@ -20,21 +20,7 @@ namespace ATH_Shoop_Network_system.Controllers
                 Name = "Shop 2",
                 Address = "Address 2",
                 Phone = "Phone 2",
-            },
-            new ShopViewModel()
-            {
-                Id = 3,
-                Name = "Shop 3",
-                Address = "Address 3",
-                Phone = "Phone 3",
-            },
-            new ShopViewModel()
-            {
-                Id = 4,
-                Name = "Shop 4",
-                Address = "Address 4",
-                Phone = "Phone 4",
-            }
+            }           
         };
 
         public IActionResult Index()
