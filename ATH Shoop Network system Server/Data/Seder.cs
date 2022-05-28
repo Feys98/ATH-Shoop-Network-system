@@ -1,12 +1,12 @@
 ﻿namespace ATH_Shoop_Network_system_Server.Data;
 public class Seeder
 {
-    public static async Task Seed(DbContext context)
+    public static async Task Seed(ApplicationDbContext context)
     {
         await context.Database.EnsureDeletedAsync();
         await context.Database.EnsureCreatedAsync();
 
-        if (context.Shops.Any())
+        if (context.Shop.Any())
         {
             return;
         }
