@@ -5,7 +5,7 @@ VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ATH Shoop Network system", "ATH Shoop Network system\ATH Shoop Network system.csproj", "{7E5C09F2-B991-4FA3-A67C-18CD5B688D54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATH Shoop Network system Server", "ATH Shoop Network system Server\ATH Shoop Network system Server.csproj", "{CE16D151-6ED4-4ED7-A946-621E4A72E4B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ATH Shoop Network system Server", "ATH Shoop Network system Server\ATH Shoop Network system Server.csproj", "{CE16D151-6ED4-4ED7-A946-621E4A72E4B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ATH_Shoop_Network_system_Server.Data;
+using AutoMapper;
+using ATH_Shoop_Network_system.Models.Product;
 
 namespace ATH_Shoop_Network_system.Controllers
 {
@@ -13,19 +15,29 @@ namespace ATH_Shoop_Network_system.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public ProductsController(ApplicationDbContext context)
+        private readonly IMapper _mapper;
+
+        public ProductsController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
+            
         }
-
+        
         // GET: Products
         public async Task<IActionResult> Index()
         {
-              return _context.Product != null ? 
-                          View(await _context.Product.ToListAsync()) :
-                          Problem("Entity set 'ATH_Shoop_Network_systemContext.Product'  is null.");
-        }
+            var dbProductList = await _context.Product.ToListAsync();
 
+            var mappedProductList = _mapper.Map<List<ProductViewModel>>(dbProductList);
+
+            ProductIndexViewModel productIndexViewModel = new ProductIndexViewModel()
+            {
+                Products =  mappedProductList
+            };
+            return View(productIndexViewModel);
+        }
+        
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -34,14 +46,25 @@ namespace ATH_Shoop_Network_system.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Product
+            var dbProduct = await _context.Product
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
+
+            if (dbProduct == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            var mappedProduct = _mapper.Map<ProductDetailsViewModel>(dbProduct);
+
+            ProductDetailsViewModel productDetailsViewModel = new ProductDetailsViewModel()
+            {
+                Id = mappedProduct.Id,
+                Name = mappedProduct.Name,
+                Description = mappedProduct.Description,
+                Price = mappedProduct.Price
+            };
+
+            return View(productDetailsViewModel);
         }
 
         // GET: Products/Create
