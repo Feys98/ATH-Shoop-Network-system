@@ -8,7 +8,10 @@ namespace ATH_Shoop_Network_system.Mappers
         public ProductMapperProfile()
         {
             CreateMap<Product, ProductViewModel>().ReverseMap();    
-            CreateMap<Product, ProductDetailsViewModel>().ReverseMap();    
+            CreateMap<Product, ProductDetailsViewModel>().ReverseMap();
+            CreateMap<Product, ProductCreateViewModel>().ReverseMap();
+            CreateMap<Product, ProductEditViewModel>().ReverseMap();
+            CreateMap<Product, ProductDeleteViewModel>().ReverseMap();
         }
     }
 }

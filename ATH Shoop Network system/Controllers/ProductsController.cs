@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+﻿using ATH_Shoop_Network_system.Models.Product;
 using ATH_Shoop_Network_system_Server.Data;
 using AutoMapper;
-using ATH_Shoop_Network_system.Models.Product;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ATH_Shoop_Network_system.Controllers
 {
@@ -21,9 +16,9 @@ namespace ATH_Shoop_Network_system.Controllers
         {
             _context = context;
             _mapper = mapper;
-            
+
         }
-        
+
         // GET: Products
         public async Task<IActionResult> Index()
         {
@@ -33,11 +28,11 @@ namespace ATH_Shoop_Network_system.Controllers
 
             ProductIndexViewModel productIndexViewModel = new ProductIndexViewModel()
             {
-                Products =  mappedProductList
+                Products = mappedProductList
             };
             return View(productIndexViewModel);
         }
-        
+
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -78,15 +73,21 @@ namespace ATH_Shoop_Network_system.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price")] ProductCreateViewModel productCreateViewModel)
         {
+
+            var dbAddProduct = _context;
+            
             if (ModelState.IsValid)
             {
-                _context.Add(product);
-                await _context.SaveChangesAsync();
+                var mappedProductToAdd = _mapper.Map<Product>(productCreateViewModel);
+                dbAddProduct.Add(mappedProductToAdd);             
+                await dbAddProduct.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
-            return View(product);
+            
+            return View(productCreateViewModel);
         }
 
         // GET: Products/Edit/5
@@ -97,12 +98,14 @@ namespace ATH_Shoop_Network_system.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Product.FindAsync(id);
-            if (product == null)
+            var dbProduct = await _context.Product.FindAsync(id);
+            var mappedProduct = _mapper.Map<ProductEditViewModel>(dbProduct);
+            
+            if (mappedProduct == null)
             {
                 return NotFound();
             }
-            return View(product);
+            return View(mappedProduct);
         }
 
         // POST: Products/Edit/5
@@ -110,9 +113,12 @@ namespace ATH_Shoop_Network_system.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price")] ProductEditViewModel productEditViewModel)
         {
-            if (id != product.Id)
+            var dbEditProduct = _context;
+            var mappedProduct = _mapper.Map<Product>(productEditViewModel);
+
+            if (id != mappedProduct.Id)
             {
                 return NotFound();
             }
@@ -121,12 +127,12 @@ namespace ATH_Shoop_Network_system.Controllers
             {
                 try
                 {
-                    _context.Update(product);
+                    _context.Update(mappedProduct);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.Id))
+                    if (!ProductExists(mappedProduct.Id))
                     {
                         return NotFound();
                     }
@@ -137,7 +143,7 @@ namespace ATH_Shoop_Network_system.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(product);
+            return View(mappedProduct);
         }
 
         // GET: Products/Delete/5
@@ -148,14 +154,16 @@ namespace ATH_Shoop_Network_system.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Product
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
+
+            var dbProduct = await _context.Product.FirstOrDefaultAsync(m => m.Id == id);
+            var mappedProduct = _mapper.Map<ProductDeleteViewModel>(dbProduct);
+
+            if (mappedProduct == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            return View(mappedProduct);
         }
 
         // POST: Products/Delete/5
@@ -163,23 +171,28 @@ namespace ATH_Shoop_Network_system.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Product == null)
+            var dbDeleteProduct = _context;
+
+            if (dbDeleteProduct.Product == null)
             {
                 return Problem("Entity set 'ATH_Shoop_Network_systemContext.Product'  is null.");
             }
-            var product = await _context.Product.FindAsync(id);
-            if (product != null)
+            var dbProduct = await dbDeleteProduct.Product.FindAsync(id);
+
+            var mappedProduct = _mapper.Map<Product>(dbProduct);
+
+            if (mappedProduct != null)
             {
-                _context.Product.Remove(product);
+                dbDeleteProduct.Product.Remove(mappedProduct);
             }
-            
-            await _context.SaveChangesAsync();
+
+            await dbDeleteProduct.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ProductExists(int id)
         {
-          return (_context.Product?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Product?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
