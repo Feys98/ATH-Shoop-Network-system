@@ -2,6 +2,6 @@
 {
     public class ProductIndexViewModel
     {
-        public List<ProductViewModel> Products { get; set; } = null!;
+        public List<ProductViewModel> Products { get; set; }
     }
 }

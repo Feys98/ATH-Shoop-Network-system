@@ -16,21 +16,18 @@ namespace ATH_Shoop_Network_system.Controllers
         {
             _context = context;
             _mapper = mapper;
-
         }
 
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            var dbProductList = await _context.Product.ToListAsync();
-
-            var mappedProductList = _mapper.Map<List<ProductViewModel>>(dbProductList);
-
-            ProductIndexViewModel productIndexViewModel = new ProductIndexViewModel()
+            IEnumerable<Product> Products = await _context.Product.ToListAsync();
+            var productIndexViewModel = new ProductIndexViewModel()
             {
-                Products = mappedProductList
+                Products = _mapper.Map<List<ProductViewModel>>(Products)
             };
-            return View(productIndexViewModel);
+            
+            return View(productIndexViewModel);       
         }
 
         // GET: Products/Details/5
@@ -41,8 +38,9 @@ namespace ATH_Shoop_Network_system.Controllers
                 return NotFound();
             }
 
-            var dbProduct = await _context.Product
-                .FirstOrDefaultAsync(m => m.Id == id);
+            IEnumerable<Product> Products = await _context.Product.ToListAsync();
+
+            var dbProduct = Products.FirstOrDefault(x => x.Id == id);
 
             if (dbProduct == null)
             {
@@ -50,16 +48,10 @@ namespace ATH_Shoop_Network_system.Controllers
             }
 
             var mappedProduct = _mapper.Map<ProductDetailsViewModel>(dbProduct);
-
-            ProductDetailsViewModel productDetailsViewModel = new ProductDetailsViewModel()
-            {
-                Id = mappedProduct.Id,
-                Name = mappedProduct.Name,
-                Description = mappedProduct.Description,
-                Price = mappedProduct.Price
-            };
-
-            return View(productDetailsViewModel);
+            
+            mappedProduct.Products = _mapper.Map<List<ProductViewModel>>(Products);
+            
+            return View(mappedProduct);
         }
 
         // GET: Products/Create
